@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>VK API с вложенными запросами (Callback Hell)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Работа с API ВКонтакте с использованием вложенных запросов</h1>
+
+        <label>Group ID: <input type="text" id="groupId" value="club1"></label>
+        <label>Сколько участников взять: <input type="number" id="membersCount" value="2"></label>
+        <label>Сколько друзей у каждого: <input type="number" id="friendsPerUser" value="10"></label>
+
+        <button onclick="getFriends()">Получить список друзей</button>
+
+        <pre id="result">Результат:</pre>
+    </div>
+</body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const TOKEN = 'token'; 
+        const VERSION = '5.131';
+
+        function jsonpRequest(method, params, callback) {
+            $.getJSON(`https://api.vk.com/method/${method}?${new URLSearchParams({
+                ...params,
+                access_token: TOKEN,
+                v: VERSION
+            })}&callback=?`, function(response) {
+                callback(response);
+            });
+        }
+
+        function getGroupMembers(groupId, count, callback) {
+            jsonpRequest('groups.getMembers', {
+                group_id: groupId,
+                sort: 'id_asc',
+                count: count,
+                fields: 'domain'
+            }, function(response) {
+                if (response.error) {
+                    document.getElementById('result').textContent = "Ошибка VK API: " + response.error.error_msg;
+                    return;
+                }
+                callback(response.response.items);
+            });
+        }
+
+        function getUserFriends(userId, count, callback) {
+            jsonpRequest('friends.get', {
+                user_id: userId,
+                count: count,
+                fields: 'domain'
+            }, function(response) {
+                if (response.response) {
+                    callback(response.response.items);
+                } else {
+                    callback(null); 
+                }
+            });
+        }
+
+        function getUserName(userId, callback) {
+            jsonpRequest('users.get', {
+                user_ids: userId
+            }, function(response) {
+                callback(response.response[0]);
+            });
+        }
+
+        function getFriends() {
+            const groupId = document.getElementById('groupId').value.trim();
+            const membersCount = parseInt(document.getElementById('membersCount').value);
+            const friendsPerUser = parseInt(document.getElementById('friendsPerUser').value);
+            const resultBox = document.getElementById('result');
+
+            const groupIdPattern = /^[a-zA-Z0-9_-]*\d+[a-zA-Z0-9_-]*$/;
+
+            if (!groupId) {
+                resultBox.textContent = "Ошибка: Group ID не может быть пустым.";
+                return;
+            }
+
+            if (!groupIdPattern.test(groupId)) {
+                resultBox.textContent = "Ошибка: Group ID должен содержать хотя бы одну цифру и только латинские буквы, цифры, '-', '_'. Русские буквы не допускаются.";
+                return;
+            }
+
+            if (isNaN(membersCount) || membersCount <= 0) {
+                resultBox.textContent = "Ошибка: Количество участников должно быть положительным числом.";
+                return;
+            }
+
+            if (isNaN(friendsPerUser) || friendsPerUser < 0) {
+                resultBox.textContent = "Ошибка: Количество друзей должно быть нулём или положительным числом.";
+                return;
+            }
+
+            resultBox.textContent = "Загрузка...";
+
+            getGroupMembers(groupId, membersCount, function(members) {
+                let output = `Показано участников: ${members.length}\n\n`;
+                let closedProfiles = 0;
+
+                function processMember(i) {
+                    if (i >= members.length) {
+                        if (closedProfiles > 0) {
+                            output += `Закрытых аккаунтов: ${closedProfiles}\n`;
+                        }
+                        resultBox.textContent = output;
+                        return;
+                    }
+
+                    const member = members[i];
+                    getUserName(member.id, function(userInfo) {
+                        output += `${i + 1}. ${userInfo.id} ${userInfo.first_name} ${userInfo.last_name}\n`;
+
+                        getUserFriends(member.id, friendsPerUser, function(friends) {
+                            if (!friends) {
+                                closedProfiles++;
+                                output += "  [Аккаунт закрыт или ошибка доступа]\n\n";
+                                processMember(i + 1);
+                                return;
+                            }
+
+                            if (friends.length === 0) {
+                                output += "  [Нет друзей]\n\n";
+                                processMember(i + 1);
+                                return;
+                            }
+
+                            output += "  Его друзья:\n";
+                            for (let j = 0; j < friends.length; j++) {
+                                const f = friends[j];
+                                output += `   ${j + 1}) ${f.id} ${f.first_name} ${f.last_name}\n`;
+                            }
+                            output += '\n';
+                            processMember(i + 1);
+                        });
+                    });
+                }
+                processMember(0);
+            });
+        }
+    </script>
+</body>
+</html>
