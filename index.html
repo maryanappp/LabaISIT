@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>VK API - Лайки</h2>
+        <input type="text" id="owner_id" placeholder="ID владельца">
+        <input type="text" id="post_id" placeholder="ID поста">
+        <button onclick="likePost()">👍 Лайкнуть пост</button>
+        <button onclick="unlikePost()">👎 Убрать лайк с поста</button>
+    </div>
+
+    <script>
+        const accessToken = "vk1.a.B1mJp7HMBI7J5Im493JYxljALpzqMZHreQ2kCRBWwTouevoiYaIiFz6JWHT_KuQESg7dmrQaq-ha6k2sGDzY7VRklZWgjPLcmbgRPWmmC0wpuBqpf8biwDt6lRNaYePrDjckc4bdzU5jXUazMiiEmeajDSJ8Yp189h36vmnR09595fPhh8aVTSNy3Ms01gQz17szxoyMqT7MbgTGVS_fzw";  
+        const apiVersion = "5.131";
+
+        function vkApiRequest(method, params) {
+            params.access_token = accessToken;
+            params.v = apiVersion;
+            
+            const url = `https://api.vk.com/method/${method}?${new URLSearchParams(params)}`;
+            console.log(`Запрос: ${url}`);
+
+            return fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Ответ VK API:", data);
+                    if (data.error) {
+                        alert(`Ошибка: ${data.error.error_msg}`);
+                    } else {
+                        alert("Операция выполнена успешно!");
+                    }
+                })
+                .catch(error => console.error("Ошибка запроса:", error));
+        }
+
+        function validateInput(ownerId, postId) {
+            if (!ownerId || !postId) {
+                alert("Поля не могут быть пустыми!");
+                return false;
+            }
+            if (isNaN(ownerId) || isNaN(postId)) {
+                alert("ID должны быть числовыми!");
+                return false;
+            }
+            return true;
+        }
+
+        function likePost() {
+            const ownerId = document.getElementById("owner_id").value;
+            const postId = document.getElementById("post_id").value;
+
+            if (!validateInput(ownerId, postId)) return;
+
+            vkApiRequest("likes.add", {
+                type: "post",
+                owner_id: ownerId,
+                item_id: postId
+            });
+        }
+
+        function unlikePost() {
+            const ownerId = document.getElementById("owner_id").value;
+            const postId = document.getElementById("post_id").value;
+
+            if (!validateInput(ownerId, postId)) return;
+
+            vkApiRequest("likes.delete", {
+                type: "post",
+                owner_id: ownerId,
+                item_id: postId  
+            });
+        }
+    </script>
+</body>
+</html>
