@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram Bot Updates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #messages {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            height: 200px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        #userPhoto img {
+            margin-top: 10px;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Telegram Bot Updates</h1>
+
+        <button onclick="showMessages('all')">Show All Messages</button>
+        <button onclick="showMessages('first')">Show First Message</button>
+        <button onclick="showMessages('last')">Show Last Message</button>
+
+        <div id="messages">Messages will appear here...</div>
+        <div id="userPhoto"></div>
+    </div>
+
+    <script>
+        const token = 'token';
+        let updatesData = [];
+
+        async function getTelegramUpdates() {
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
+                const data = await response.json();
+                console.log('Data:', data);
+
+                if (data.ok && data.result.length > 0) {
+                    updatesData = data.result.filter(update => update.message && update.message.text);
+                    displayMessages('all'); 
+                } else {
+                    document.getElementById('messages').innerHTML = 'No new messages.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function showMessages(option) {
+            document.getElementById('messages').innerHTML = '';
+            document.getElementById('userPhoto').innerHTML = '';
+
+            if (updatesData.length === 0) {
+                document.getElementById('messages').innerHTML = 'No messages loaded.';
+                return;
+            }
+
+            let toShow = [];
+
+            if (option === 'first') {
+                toShow = [updatesData[0]];
+            } else if (option === 'last') {
+                toShow = [updatesData[updatesData.length - 1]];
+            } else {
+                toShow = updatesData;
+            }
+
+            toShow.forEach(update => {
+                const msg = update.message.text;
+                const sender = update.message.from.first_name;
+                const userId = update.message.from.id;
+
+                const msgDiv = document.createElement('div');
+                msgDiv.innerHTML = `<strong>${sender}:</strong> ${msg}`;
+                document.getElementById('messages').appendChild(msgDiv);
+
+                if (option !== 'all') {
+                    displayUserProfilePhoto(userId);
+                }
+            });
+        }
+
+        async function displayUserProfilePhoto(userId) {
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${token}/getUserProfilePhotos?user_id=${userId}`);
+                const data = await res.json();
+                if (data.ok && data.result.total_count > 0) {
+                    const fileId = data.result.photos[0][0].file_id;
+                    const fileRes = await fetch(`https://api.telegram.org/bot${token}/getFile?file_id=${fileId}`);
+                    const fileData = await fileRes.json();
+                    const filePath = fileData.result.file_path;
+                    const photoUrl = `https://api.telegram.org/file/bot${token}/${filePath}`;
+
+                    const img = document.createElement('img');
+                    img.src = photoUrl;
+                    document.getElementById('userPhoto').appendChild(img);
+                }
+            } catch (error) {
+                console.error('Error loading profile photo:', error);
+            }
+        }
+
+        getTelegramUpdates();
+    </script>
+</body>
+</html>
