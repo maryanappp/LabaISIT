@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #ff4d4d;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.library {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.book {
+    background-color: #3b3838;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(94, 0, 0, 0.5);
+}
+
+.book-title {
+    font-family: 'Snell Roundhand', cursive;
+    color: rgb(178, 58, 58);
+    font-size: 32px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.book-author {
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 24px;
+    color: rgb(192, 180, 180);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.book-details {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.detail-item {
+    font-family: 'Comic Sans MS', sans-serif;
+    color: rgb(192, 180, 180);
+    font-size: 16px;
+}
+
+.description {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.facts, .problems, .themes, .reviews {
+    flex: 1;
+}
+
+.section-title {
+    font-family: 'Comic Sans MS', sans-serif;
+    color: rgb(203, 155, 155);
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.fact, .problem, .theme, .review {
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 14px;
+    color: #e6d8d6;
+    margin-bottom: 8px;
+    padding-left: 10px;
+}
+
+.fact::before {
+    content: "★ ";
+}
+
+.problem::before {
+    content: "◯ ";
+}
+
+.theme::before {
+    content: "◆ ";
+}
+
+.review::before {
+    content: "✎ ";
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #ff4d4d;
+    margin: 30px auto;
+    width: 60%;
+}

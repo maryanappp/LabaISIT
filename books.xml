@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <book>
+        <metadata>
+            <title>Приключения Шерлока Холмса</title>
+            <author>Артур Конан Дойл</author>
+            <year>1892 год</year>
+            <genre>Детектив</genre>
+            <pages>307 страниц</pages>
+            <language>Русский</language>
+        </metadata>
+        <content>
+            <facts>
+                <fact>Шерлок Холмс — гениальный сыщик</fact>
+                <fact>Доктор Ватсон — его верный друг</fact>
+            </facts>
+            <themes>
+                <theme>Криминал</theme>
+                <theme>Логика</theme>
+            </themes>
+        </content>
+        <analysis>
+            <problems>
+                <problem>Роль личности в истории</problem>
+                <problem>Борьба с преступностью</problem>
+            </problems>
+            <reviews>
+                <review>Классика детективного жанра</review>
+                <review>Блестящие дедуктивные методы</review>
+            </reviews>
+        </analysis>
+    </book>
+    
+    <book>
+        <metadata>
+            <title>1984 год</title>
+            <author>Джордж Оруэлл</author>
+            <year>1949</year>
+            <genre>Антиутопия</genre>
+            <pages>328 страниц</pages>
+            <language>Русский</language>
+        </metadata>
+        <content>
+            <facts>
+                <fact>Тоталитарное общество</fact>
+                <fact>Контроль за мыслями людей</fact>
+            </facts>
+            <themes>
+                <theme>Тоталитаризм</theme>
+                <theme>Цензура</theme>
+            </themes>
+        </content>
+        <analysis>
+            <problems>
+                <problem>Угроза свободы и права человека</problem>
+                <problem>Манипуляции с историей</problem>
+            </problems>
+            <reviews>
+                <review>Пророческое видение будущего</review>
+                <review>Пугающе актуально</review>
+            </reviews>
+        </analysis>
+    </book>
+    
+    <book>
+        <metadata>
+            <title>Маленький принц</title>
+            <author>Антуан де Сент-Экзюпери</author>
+            <year>1943</year>
+            <genre>Философская сказка</genre>
+            <pages>96 страниц</pages>
+            <language>Русский</language>
+        </metadata>
+        <content>
+            <facts>
+                <fact>Мудрые уроки жизни</fact>
+                <fact>Маленький принц путешествует по планетам</fact>
+            </facts>
+            <themes>
+                <theme>Дружба</theme>
+                <theme>Одиночество</theme>
+            </themes>
+        </content>
+        <analysis>
+            <problems>
+                <problem>Потерянность в мире взрослых</problem>
+                <problem>Тема одиночества и дружбы</problem>
+            </problems>
+            <reviews>
+                <review>Трогательная история</review>
+                <review>Глубокая философская притча</review>
+            </reviews>
+        </analysis>
+    </book>
+</library>
