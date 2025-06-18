@@ -10,7 +10,7 @@
 Создание CSS файла с описанием стилей элементов из index.xml
 
 ## Пример работы
-![Скриншот XML-документа](https://github.com/maryanappp/LabaISIT/raw/laba1_/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-06-18%20%D0%B2%2000.48.37.png)
+![Скриншот XML-документа](https://github.com/maryanappp/LabaISIT/raw/laba1/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-06-18%20%D0%B2%2000.48.37.png)
 ## Проверка требований 
 Уровни вложенности:
 1 уровень: корневой элемент <library>
